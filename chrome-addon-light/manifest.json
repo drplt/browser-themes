@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Droplet Light",
+  "version": "1.0.0",
+  "description": "Crisp white (#ffffff) and light grey (#fafafa / #f2f6f8) theme with midnight blue (#000235) typography and vibrant hot pink (#ff00b8) and berry (#ac00d7) accents inspired by droplet.io.",
+  "author": "Droplet Inc.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "64": "icons/icon64.png",
+    "128": "icons/icon128.png"
+  },
+  "theme": {
+    "images": {
+      "theme_toolbar": "images/theme_toolbar.png"
+    },
+    "colors": {
+      "frame": [230, 236, 242],
+      "frame_inactive": [216, 224, 234],
+      "frame_incognito": [0, 2, 53],
+      "frame_incognito_inactive": [0, 1, 32],
+      "background_tab": [230, 236, 242],
+      "background_tab_inactive": [216, 224, 234],
+      "background_tab_incognito": [0, 2, 53],
+      "background_tab_incognito_inactive": [0, 1, 32],
+      "toolbar": [250, 250, 250],
+      "toolbar_text": [0, 2, 53],
+      "toolbar_button_icon": [255, 0, 184],
+      "tab_text": [0, 2, 53],
+      "tab_background_text": [44, 69, 109],
+      "tab_background_text_inactive": [93, 108, 123],
+      "tab_background_text_incognito": [230, 236, 242],
+      "tab_background_text_incognito_inactive": [180, 192, 228],
+      "bookmark_text": [24, 41, 69],
+      "omnibox_background": [242, 246, 248],
+      "omnibox_text": [0, 2, 53],
+      "ntp_background": [250, 250, 250],
+      "ntp_text": [0, 2, 53],
+      "ntp_link": [255, 0, 184],
+      "ntp_header": [255, 255, 255],
+      "button_background": [230, 236, 242]
+    },
+    "tints": {
+      "background_tab": [-1, -1, -1]
+    }
+  }
+}

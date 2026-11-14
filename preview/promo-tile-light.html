@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  html, body {
+    width: 440px;
+    height: 280px;
+    overflow: hidden;
+    background-color: #fafafa;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+    color: #000235;
+    -webkit-font-smoothing: antialiased;
+  }
+  .canvas {
+    position: relative;
+    width: 440px;
+    height: 280px;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(255, 0, 184, 0.14) 0%, transparent 52%),
+      radial-gradient(circle at 88% 82%, rgba(172, 0, 215, 0.12) 0%, transparent 55%),
+      linear-gradient(155deg, #ffffff 0%, #fafafa 55%, #f2f6f8 100%);
+    padding: 22px 24px 0 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .canvas::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(0, 2, 53, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 2, 53, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  .header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+  .logo-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: #ffffff;
+    border: 2px solid #ff00b8;
+    box-shadow: 0 6px 20px rgba(255, 0, 184, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .logo-box img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+  }
+  .title-group h1 {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #000235;
+    line-height: 1.15;
+  }
+  .title-group p {
+    font-size: 12px;
+    font-weight: 500;
+    color: #2c456d;
+    margin-top: 3px;
+  }
+  .swatches {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  .badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ac00d7 0%, #ff00b8 100%);
+    color: #ffffff;
+  }
+  .dots {
+    display: flex;
+    gap: 5px;
+  }
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 2, 53, 0.18);
+  }
+
+  /* Mini Browser Window Mockup */
+  .browser-mockup {
+    position: relative;
+    z-index: 2;
+    background: #fafafa;
+    border: 1px solid rgba(44, 69, 109, 0.22);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -6px 24px rgba(0, 2, 53, 0.10), 0 0 20px rgba(255, 0, 184, 0.10);
+    overflow: hidden;
+    height: 174px;
+    display: flex;
+    flex-direction: column;
+  }
+  .tab-strip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px 0 12px;
+    background: #e6ecf2;
+  }
+  .win-dots {
+    display: flex;
+    gap: 5px;
+    margin-right: 6px;
+    padding-bottom: 6px;
+  }
+  .win-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px 8px 0 0;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tab.active {
+    background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+    color: #000235;
+    border: 1px solid rgba(44, 69, 109, 0.18);
+    border-bottom: none;
+    border-top: 2.5px solid #ff00b8;
+    box-shadow: 0 -2px 10px rgba(255, 0, 184, 0.14);
+  }
+  .tab-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff00b8;
+  }
+  .tab.inactive {
+    color: #2c456d;
+    font-weight: 500;
+  }
+  .toolbar {
+    background: #fafafa;
+    padding: 7px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .nav-icons {
+    display: flex;
+    gap: 6px;
+    color: #ff00b8;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .omnibox {
+    flex: 1;
+    background: #f2f6f8;
+    border: 1px solid #ff00b8;
+    box-shadow: 0 0 0 2px rgba(255, 0, 184, 0.14);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: #000235;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .omnibox .scheme {
+    color: #ff00b8;
+    font-weight: 600;
+  }
+  .omnibox .host {
+    color: #000235;
+    font-weight: 600;
+  }
+  .viewport {
+    flex: 1;
+    background: #fafafa;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    box-shadow: 0 2px 6px rgba(0, 2, 53, 0.04);
+  }
+  .card.highlight {
+    border-color: rgba(255, 0, 184, 0.45);
+    background: linear-gradient(135deg, rgba(255, 0, 184, 0.08), rgba(172, 0, 215, 0.04)), #ffffff;
+  }
+  .bar-sm {
+    height: 5px;
+    width: 55%;
+    border-radius: 3px;
+    background: #ff00b8;
+  }
+  .card:not(.highlight) .bar-sm {
+    background: #ac00d7;
+  }
+  .bar-lg {
+    height: 4px;
+    width: 85%;
+    border-radius: 2px;
+    background: rgba(44, 69, 109, 0.25);
+  }
+  .bar-md {
+    height: 4px;
+    width: 65%;
+    border-radius: 2px;
+    background: rgba(44, 69, 109, 0.14);
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="header">
+      <div class="brand">
+        <div class="logo-box">
+          <img src="../firefox-addon-light/icons/icon128.png" alt="Droplet Light" />
+        </div>
+        <div class="title-group">
+          <h1>Droplet Light</h1>
+          <p>Crisp Light Grey &amp; Hot Pink Theme</p>
+        </div>
+      </div>
+      <div class="swatches">
+        <span class="badge">Theme</span>
+        <div class="dots">
+          <span class="dot" style="background:#ffffff"></span>
+          <span class="dot" style="background:#f2f6f8"></span>
+          <span class="dot" style="background:#000235"></span>
+          <span class="dot" style="background:#ac00d7"></span>
+          <span class="dot" style="background:#ff00b8"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="browser-mockup">
+      <div class="tab-strip">
+        <div class="win-dots">
+          <span style="background:#ff5f56"></span>
+          <span style="background:#ffbd2e"></span>
+          <span style="background:#27c93f"></span>
+        </div>
+        <div class="tab active">
+          <span class="tab-dot"></span>
+          Droplet Light
+        </div>
+        <div class="tab inactive">droplet.io</div>
+      </div>
+      <div class="toolbar">
+        <div class="nav-icons">&#8592; &nbsp; &#8594; &nbsp; &#8635;</div>
+        <div class="omnibox">
+          <span class="scheme">https://</span><span class="host">droplet.io</span><span style="color:#2c456d">/light-theme</span>
+        </div>
+      </div>
+      <div class="viewport">
+        <div class="card highlight">
+          <div class="bar-sm"></div>
+          <div class="bar-lg"></div>
+          <div class="bar-md"></div>
+        </div>
+        <div class="card">
+          <div class="bar-sm"></div>
+          <div class="bar-lg"></div>
+          <div class="bar-md"></div>
+        </div>
+        <div class="card">
+          <div class="bar-sm" style="background:#0084ff"></div>
+          <div class="bar-lg"></div>
+          <div class="bar-md"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

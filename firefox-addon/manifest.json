@@ -1,0 +1,111 @@
+{
+  "manifest_version": 2,
+  "name": "Droplet Dark",
+  "version": "1.0.0",
+  "description": "Midnight blue (#000235) dark theme with signature hot pink (#ff00b8) and berry (#ac00d7) accents inspired by droplet.io.",
+  "author": "Droplet Inc.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "64": "icons/icon64.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "<placeholder_need_email>",
+      "strict_min_version": "109.0"
+    }
+  },
+  "theme": {
+    "colors": {
+      "frame": "#000235",
+      "frame_inactive": "#000120",
+      "tab_background_text": "#b4c0e4",
+      "tab_text": "#ffffff",
+      "tab_selected": "#16125c",
+      "tab_line": "#ff00b8",
+      "tab_loading": "#ff00b8",
+      "tab_background_separator": "#182945",
+      "toolbar": "#0b0d3d",
+      "toolbar_text": "#ffffff",
+      "toolbar_field": "#000235",
+      "toolbar_field_text": "#ffffff",
+      "toolbar_field_border": "#241ab4",
+      "toolbar_field_focus": "#111452",
+      "toolbar_field_text_focus": "#ffffff",
+      "toolbar_field_border_focus": "#ff00b8",
+      "toolbar_field_highlight": "#ff00b8",
+      "toolbar_field_highlight_text": "#ffffff",
+      "toolbar_top_separator": "#241ab4",
+      "toolbar_bottom_separator": "#182945",
+      "toolbar_vertical_separator": "#182945",
+      "icons": "#ff00b8",
+      "icons_attention": "#ff33c7",
+      "button_background_hover": "#1b1869",
+      "button_background_active": "#241ab4",
+      "popup": "#0b0d3d",
+      "popup_text": "#ffffff",
+      "popup_border": "#ac00d7",
+      "popup_highlight": "#1b1869",
+      "popup_highlight_text": "#ff00b8",
+      "sidebar": "#070936",
+      "sidebar_text": "#ffffff",
+      "sidebar_border": "#182945",
+      "sidebar_highlight": "#1b1869",
+      "sidebar_highlight_text": "#ff00b8",
+      "ntp_background": "#000235",
+      "ntp_card_background": "#0b0d3d",
+      "ntp_text": "#ffffff"
+    },
+    "properties": {
+      "color_scheme": "dark",
+      "content_color_scheme": "dark"
+    }
+  },
+  "dark_theme": {
+    "colors": {
+      "frame": "#000235",
+      "frame_inactive": "#000120",
+      "tab_background_text": "#b4c0e4",
+      "tab_text": "#ffffff",
+      "tab_selected": "#16125c",
+      "tab_line": "#ff00b8",
+      "tab_loading": "#ff00b8",
+      "tab_background_separator": "#182945",
+      "toolbar": "#0b0d3d",
+      "toolbar_text": "#ffffff",
+      "toolbar_field": "#000235",
+      "toolbar_field_text": "#ffffff",
+      "toolbar_field_border": "#241ab4",
+      "toolbar_field_focus": "#111452",
+      "toolbar_field_text_focus": "#ffffff",
+      "toolbar_field_border_focus": "#ff00b8",
+      "toolbar_field_highlight": "#ff00b8",
+      "toolbar_field_highlight_text": "#ffffff",
+      "toolbar_top_separator": "#241ab4",
+      "toolbar_bottom_separator": "#182945",
+      "toolbar_vertical_separator": "#182945",
+      "icons": "#ff00b8",
+      "icons_attention": "#ff33c7",
+      "button_background_hover": "#1b1869",
+      "button_background_active": "#241ab4",
+      "popup": "#0b0d3d",
+      "popup_text": "#ffffff",
+      "popup_border": "#ac00d7",
+      "popup_highlight": "#1b1869",
+      "popup_highlight_text": "#ff00b8",
+      "sidebar": "#070936",
+      "sidebar_text": "#ffffff",
+      "sidebar_border": "#182945",
+      "sidebar_highlight": "#1b1869",
+      "sidebar_highlight_text": "#ff00b8",
+      "ntp_background": "#000235",
+      "ntp_card_background": "#0b0d3d",
+      "ntp_text": "#ffffff"
+    },
+    "properties": {
+      "color_scheme": "dark",
+      "content_color_scheme": "dark"
+    }
+  }
+}

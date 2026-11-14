@@ -1,0 +1,65 @@
+{
+  "manifest_version": 2,
+  "name": "Droplet Light",
+  "version": "1.0.0",
+  "description": "Crisp white (#ffffff) and light grey (#fafafa / #f2f6f8) theme with midnight blue (#000235) typography and vibrant hot pink (#ff00b8) and berry (#ac00d7) accents inspired by droplet.io.",
+  "author": "Droplet Inc.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "64": "icons/icon64.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "<placeholder_need_email>",
+      "strict_min_version": "109.0"
+    }
+  },
+  "theme": {
+    "colors": {
+      "frame": "#e6ecf2",
+      "frame_inactive": "#d8e0ea",
+      "tab_background_text": "#2c456d",
+      "tab_text": "#000235",
+      "tab_selected": "#ffffff",
+      "tab_line": "#ff00b8",
+      "tab_loading": "#ff00b8",
+      "tab_background_separator": "#cfd8e3",
+      "toolbar": "#fafafa",
+      "toolbar_text": "#000235",
+      "toolbar_field": "#f2f6f8",
+      "toolbar_field_text": "#000235",
+      "toolbar_field_border": "#cfd8e3",
+      "toolbar_field_focus": "#ffffff",
+      "toolbar_field_text_focus": "#000235",
+      "toolbar_field_border_focus": "#ff00b8",
+      "toolbar_field_highlight": "#ff00b8",
+      "toolbar_field_highlight_text": "#ffffff",
+      "toolbar_top_separator": "#cfd8e3",
+      "toolbar_bottom_separator": "#e2e8f0",
+      "toolbar_vertical_separator": "#e2e8f0",
+      "icons": "#ff00b8",
+      "icons_attention": "#ac00d7",
+      "button_background_hover": "#e6ecf2",
+      "button_background_active": "#d8e0ea",
+      "popup": "#ffffff",
+      "popup_text": "#000235",
+      "popup_border": "#cfd8e3",
+      "popup_highlight": "#fdf0fa",
+      "popup_highlight_text": "#ff00b8",
+      "sidebar": "#fafafa",
+      "sidebar_text": "#000235",
+      "sidebar_border": "#e2e8f0",
+      "sidebar_highlight": "#fdf0fa",
+      "sidebar_highlight_text": "#ff00b8",
+      "ntp_background": "#fafafa",
+      "ntp_card_background": "#ffffff",
+      "ntp_text": "#000235"
+    },
+    "properties": {
+      "color_scheme": "light",
+      "content_color_scheme": "light"
+    }
+  }
+}

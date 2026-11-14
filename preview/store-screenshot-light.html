@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Droplet Light — Store Screenshot (1280x800)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1280px; height: 800px; overflow: hidden;
+    background-color: #fafafa;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+    color: #000235; -webkit-font-smoothing: antialiased;
+  }
+  .canvas {
+    position: relative; width: 1280px; height: 800px;
+    background:
+      radial-gradient(circle at 14% 16%, rgba(255, 0, 184, 0.14) 0%, transparent 48%),
+      radial-gradient(circle at 86% 84%, rgba(172, 0, 215, 0.11) 0%, transparent 52%),
+      linear-gradient(160deg, #ffffff 0%, #fafafa 52%, #f2f6f8 100%);
+    padding: 42px 56px 0 56px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .canvas::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(0, 2, 53, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 2, 53, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px; pointer-events: none;
+  }
+  .hero { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 20px; }
+  .logo-box {
+    width: 72px; height: 72px; border-radius: 18px;
+    background: #ffffff; border: 2.5px solid #ff00b8;
+    box-shadow: 0 10px 30px rgba(255, 0, 184, 0.22);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;
+  }
+  .logo-box img { width: 52px; height: 52px; object-fit: contain; }
+  .title-group h1 {
+    font-size: 34px; font-weight: 800; letter-spacing: -0.025em; color: #000235;
+    line-height: 1.1; display: flex; align-items: center; gap: 12px;
+  }
+  .title-badge {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 5px 12px; border-radius: 999px;
+    background: linear-gradient(90deg, #ac00d7 0%, #ff00b8 100%); color: #ffffff;
+  }
+  .title-group p { font-size: 16px; font-weight: 500; color: #2c456d; margin-top: 6px; }
+  .palette-panel {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(44, 69, 109, 0.20);
+    border-radius: 14px; padding: 10px 14px; box-shadow: 0 8px 24px rgba(0, 2, 53, 0.08);
+  }
+  .swatch-item {
+    display: flex; align-items: center; gap: 7px; padding: 4px 8px;
+    border-radius: 8px; background: #f2f6f8; border: 1px solid rgba(44, 69, 109, 0.16);
+  }
+  .swatch-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0, 2, 53, 0.18); }
+  .swatch-hex { font-family: "SF Mono", Menlo, monospace; font-size: 11.5px; font-weight: 600; color: #000235; }
+
+  .browser-window {
+    position: relative; z-index: 2; height: 618px; background: #fafafa;
+    border: 1px solid rgba(44, 69, 109, 0.24); border-bottom: none;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -16px 50px rgba(0, 2, 53, 0.12), 0 0 36px rgba(255, 0, 184, 0.10);
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .tab-strip {
+    background: #e6ecf2; padding: 10px 16px 0 18px;
+    display: flex; align-items: flex-end; gap: 6px; height: 46px;
+  }
+  .traffic-lights { display: flex; align-items: center; gap: 8px; margin-right: 14px; padding-bottom: 12px; }
+  .traffic-lights span { width: 12px; height: 12px; border-radius: 50%; }
+  .tab {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; height: 36px; padding: 0 14px; border-radius: 10px 10px 0 0;
+    font-size: 13px; min-width: 195px; position: relative;
+  }
+  .tab-left { display: flex; align-items: center; gap: 9px; }
+  .tab.active {
+    background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+    color: #000235; font-weight: 600;
+    border: 1px solid rgba(44, 69, 109, 0.20); border-bottom: none;
+    border-top: 2.5px solid #ff00b8;
+    box-shadow: 0 -3px 14px rgba(255, 0, 184, 0.15); z-index: 2;
+  }
+  .tab.inactive { background: transparent; color: #2c456d; font-weight: 500; padding-bottom: 2px; }
+  .tab-divider { width: 1px; height: 16px; background: #cfd8e3; margin-bottom: 10px; }
+  .tab-favicon {
+    width: 16px; height: 16px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;
+  }
+  .tab-favicon.pink { background: rgba(255, 0, 184, 0.14); border: 1px solid #ff00b8; color: #ff00b8; }
+  .tab-favicon.berry { background: rgba(172, 0, 215, 0.14); border: 1px solid #ac00d7; color: #ac00d7; }
+  .tab-favicon.slate { background: rgba(44, 69, 109, 0.12); border: 1px solid rgba(44, 69, 109, 0.3); color: #2c456d; }
+  .tab-close { font-size: 13px; color: #2c456d; line-height: 1; }
+  .tab.active .tab-close { color: #000235; }
+  .new-tab-btn {
+    width: 28px; height: 28px; margin-bottom: 4px; margin-left: 4px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; color: #2c456d; font-size: 17px;
+  }
+
+  .toolbar { background: #fafafa; padding: 8px 16px; display: flex; align-items: center; gap: 12px; }
+  .nav-buttons { display: flex; align-items: center; gap: 6px; }
+  .nav-btn {
+    width: 30px; height: 30px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #ff00b8; font-size: 15px; font-weight: 700;
+  }
+  .nav-btn.muted { color: rgba(255, 0, 184, 0.45); }
+  .omnibox {
+    flex: 1; height: 34px; background: #f2f6f8;
+    border: 1.5px solid #ff00b8; box-shadow: 0 0 0 3px rgba(255, 0, 184, 0.14);
+    border-radius: 999px; padding: 0 14px;
+    display: flex; align-items: center; justify-content: space-between; font-size: 13.5px;
+  }
+  .omnibox-left { display: flex; align-items: center; gap: 8px; }
+  .tune-icon {
+    width: 20px; height: 20px; border-radius: 50%; background: #ffffff; color: #ff00b8;
+    border: 1px solid rgba(255, 0, 184, 0.35);
+    display: flex; align-items: center; justify-content: center; font-size: 11px;
+  }
+  .url-scheme { color: #ff00b8; font-weight: 600; }
+  .url-domain { color: #000235; font-weight: 600; }
+  .url-path { color: #2c456d; }
+  .omnibox-right { display: flex; align-items: center; gap: 10px; color: #ff00b8; font-size: 14px; }
+  .action-pill {
+    height: 28px; padding: 0 10px; border-radius: 8px;
+    background: #ffffff; border: 1px solid rgba(44, 69, 109, 0.22);
+    color: #000235; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px;
+  }
+
+  .bookmarks-bar {
+    background: #fafafa; padding: 4px 18px 8px 18px;
+    display: flex; align-items: center; gap: 16px;
+    border-bottom: 1px solid #e2e8f0; font-size: 12px; color: #2c456d;
+  }
+  .bm-item { display: flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 6px; }
+  .bm-item.active { background: #e6ecf2; color: #000235; font-weight: 600; }
+  .bm-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  .viewport {
+    flex: 1;
+    background: radial-gradient(circle at 50% 0%, rgba(255, 0, 184, 0.08) 0%, transparent 60%), #fafafa;
+    padding: 28px 32px; display: flex; flex-direction: column; gap: 22px;
+  }
+  .callout-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(135deg, rgba(255, 0, 184, 0.09) 0%, rgba(172, 0, 215, 0.06) 100%), #ffffff;
+    border: 1px solid rgba(255, 0, 184, 0.42); border-radius: 14px; padding: 18px 24px;
+    box-shadow: 0 8px 24px rgba(0, 2, 53, 0.06);
+  }
+  .callout-left { display: flex; align-items: center; gap: 16px; }
+  .callout-icon {
+    width: 44px; height: 44px; border-radius: 11px;
+    background: rgba(255, 0, 184, 0.12); border: 1px solid rgba(255, 0, 184, 0.45);
+    display: flex; align-items: center; justify-content: center; color: #ff00b8; font-size: 20px; font-weight: 700;
+  }
+  .callout-text h2 { font-size: 18px; font-weight: 700; color: #000235; }
+  .callout-text p { font-size: 13.5px; color: #2c456d; margin-top: 3px; }
+  .callout-pills { display: flex; gap: 10px; flex-shrink: 0; margin-left: 16px; }
+  .feature-chip {
+    padding: 7px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    background: #f2f6f8; border: 1px solid rgba(44, 69, 109, 0.22); color: #000235;
+    display: flex; align-items: center; gap: 7px; white-space: nowrap;
+  }
+  .feature-chip span { width: 8px; height: 8px; border-radius: 50%; }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; flex: 1; }
+  .card {
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: 0 6px 20px rgba(0, 2, 53, 0.05);
+  }
+  .card.featured { border-color: rgba(255, 0, 184, 0.50); box-shadow: 0 6px 24px rgba(255, 0, 184, 0.12); }
+  .card-header { display: flex; align-items: center; justify-content: space-between; }
+  .card-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 6px; }
+  .card-tag.pink { background: rgba(255, 0, 184, 0.12); color: #ff00b8; border: 1px solid rgba(255, 0, 184, 0.35); }
+  .card-tag.berry { background: rgba(172, 0, 215, 0.12); color: #ac00d7; border: 1px solid rgba(172, 0, 215, 0.35); }
+  .card-tag.slate { background: #f2f6f8; color: #2c456d; border: 1px solid #cfd8e3; }
+  .card h3 { font-size: 16px; font-weight: 700; color: #000235; margin-top: 12px; }
+  .card p { font-size: 13px; line-height: 1.5; color: #2c456d; margin-top: 6px; }
+  .token-list { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .token-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 11px; border-radius: 8px; background: #f2f6f8;
+    border: 1px solid #e2e8f0; font-size: 12px;
+  }
+  .token-name { color: #000235; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .token-swatch { width: 12px; height: 12px; border-radius: 3px; border: 1px solid rgba(0, 2, 53, 0.18); }
+  .token-val { font-family: "SF Mono", Menlo, monospace; font-size: 11.5px; color: #ff00b8; font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="hero">
+      <div class="brand">
+        <div class="logo-box">
+          <img src="../firefox-addon-light/icons/icon128.png" alt="Droplet Light" />
+        </div>
+        <div class="title-group">
+          <h1>
+            Droplet Light
+            <span class="title-badge">Browser Theme</span>
+          </h1>
+          <p>Crisp Light Grey (#FAFAFA) Surfaces &amp; Vibrant Hot Pink (#FF00B8) Accents</p>
+        </div>
+      </div>
+
+      <div class="palette-panel">
+        <div class="swatch-item"><span class="swatch-dot" style="background:#ffffff"></span><span class="swatch-hex">#FFFFFF</span></div>
+        <div class="swatch-item"><span class="swatch-dot" style="background:#fafafa"></span><span class="swatch-hex">#FAFAFA</span></div>
+        <div class="swatch-item"><span class="swatch-dot" style="background:#f2f6f8"></span><span class="swatch-hex">#F2F6F8</span></div>
+        <div class="swatch-item"><span class="swatch-dot" style="background:#000235"></span><span class="swatch-hex">#000235</span></div>
+        <div class="swatch-item"><span class="swatch-dot" style="background:#ff00b8"></span><span class="swatch-hex">#FF00B8</span></div>
+      </div>
+    </div>
+
+    <div class="browser-window">
+      <div class="tab-strip">
+        <div class="traffic-lights">
+          <span style="background:#ff5f56"></span>
+          <span style="background:#ffbd2e"></span>
+          <span style="background:#27c93f"></span>
+        </div>
+
+        <div class="tab active">
+          <div class="tab-left">
+            <span class="tab-favicon pink">D</span>
+            <span>Droplet Light — Theme</span>
+          </div>
+          <span class="tab-close">&times;</span>
+        </div>
+
+        <div class="tab inactive">
+          <div class="tab-left">
+            <span class="tab-favicon berry">&#9670;</span>
+            <span>droplet.io — Platform</span>
+          </div>
+          <span class="tab-close">&times;</span>
+        </div>
+
+        <div class="tab-divider"></div>
+
+        <div class="tab inactive">
+          <div class="tab-left">
+            <span class="tab-favicon slate">&#9788;</span>
+            <span>Design Tokens &amp; Specs</span>
+          </div>
+          <span class="tab-close">&times;</span>
+        </div>
+
+        <div class="new-tab-btn">+</div>
+      </div>
+
+      <div class="toolbar">
+        <div class="nav-buttons">
+          <div class="nav-btn">&#8592;</div>
+          <div class="nav-btn muted">&#8594;</div>
+          <div class="nav-btn">&#8635;</div>
+          <div class="nav-btn">&#8962;</div>
+        </div>
+
+        <div class="omnibox">
+          <div class="omnibox-left">
+            <span class="tune-icon">&#9881;</span>
+            <div>
+              <span class="url-scheme">https://</span><span class="url-domain">droplet.io</span><span class="url-path">/themes/light-edition</span>
+            </div>
+          </div>
+          <div class="omnibox-right"><span>&#9734;</span></div>
+        </div>
+
+        <div class="toolbar-actions">
+          <div class="action-pill">
+            <span style="color:#ff00b8">&#9679;</span>
+            Droplet Light v1.0
+          </div>
+        </div>
+      </div>
+
+      <div class="bookmarks-bar">
+        <div class="bm-item active"><span class="bm-dot" style="background:#ff00b8"></span><span>Droplet Home</span></div>
+        <div class="bm-item"><span class="bm-dot" style="background:#ac00d7"></span><span>Workflows &amp; Forms</span></div>
+        <div class="bm-item"><span class="bm-dot" style="background:#0084ff"></span><span>Design System</span></div>
+        <div class="bm-item"><span class="bm-dot" style="background:#27c93f"></span><span>Documentation</span></div>
+      </div>
+
+      <div class="viewport">
+        <div class="callout-row">
+          <div class="callout-left">
+            <div class="callout-icon">&#10024;</div>
+            <div class="callout-text">
+              <h2>Daylight Clarity Powered by Official droplet.io Tokens</h2>
+              <p>Pure white active tab (#FFFFFF) and light grey toolbar (#FAFAFA) with midnight blue (#000235) text and hot pink (#FF00B8) accents.</p>
+            </div>
+          </div>
+          <div class="callout-pills">
+            <div class="feature-chip"><span style="background:#ff00b8"></span>Hot Pink Cap</div>
+            <div class="feature-chip"><span style="background:#000235"></span>Midnight Typography</div>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+          <div class="card featured">
+            <div>
+              <div class="card-header"><span class="card-tag pink">Active Tab &amp; Frame</span></div>
+              <h3>Crisp Daylight Tab Hierarchy</h3>
+              <p>Pure white active tabs (#FFFFFF) with a #FF00B8 → #AC00D7 top highlight bar stand out cleanly against the cool #E6ECF2 frame.</p>
+            </div>
+            <div class="token-list">
+              <div class="token-row"><span class="token-name"><span class="token-swatch" style="background:#ff00b8"></span>Primary Pink Accent</span><span class="token-val">#FF00B8</span></div>
+              <div class="token-row"><span class="token-name"><span class="token-swatch" style="background:#ffffff"></span>Selected Tab Surface</span><span class="token-val">#FFFFFF</span></div>
+              <div class="token-row"><span class="token-name"><span class="token-swatch" style="background:#fafafa"></span>Toolbar Surface</span><span class="token-val">#FAFAFA</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div>
+              <div class="card-header"><span class="card-tag berry">Address Bar &amp; Icons</span></div>
+              <h3>Chip-Grey Omnibox &amp; Pink Icons</h3>
+              <p>Soft chip-grey address bar (#F2F6F8) paired with deep midnight blue (#000235) typography and #FF00B8 toolbar icons.</p>
+            </div>
+            <div class="token-list">
+              <div class="token-row"><span class="token-name"><span class="token-swatch" style="background:#f2f6f8"></span>Omnibox Background</span><span class="token-val">#F2F6F8</span></div>
+              <div class="token-row"><span class="token-name"><span class="token-swatch" style="background:#ff00b8"></span>Toolbar Button Icons</span><span class="token-val">#FF00B8</span></div>
+              <div class="token-row"><span class="token-name"><span class="token-swatch" style="background:#000235"></span>Primary Heading Text</span><span class="token-val">#000235</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div>
+              <div class="card-header"><span class="card-tag slate">New Tab &amp; Surfaces</span></div>
+              <h3>Unified Droplet Light Palette</h3>
+              <p>Built for Firefox and Chrome with matching New Tab pages, popups, bookmarks bar, and focus rings.</p>
+            </div>
+            <div class="token-list">
+              <div class="token-row"><span class="token-name"><span class="token-swatch" style="background:#ffffff"></span>Card &amp; Popup Surface</span><span class="token-val">#FFFFFF</span></div>
+              <div class="token-row"><span class="token-name"><span class="token-swatch" style="background:#2c456d"></span>Secondary Slate Text</span><span class="token-val">#2C456D</span></div>
+              <div class="token-row"><span class="token-name"><span class="token-swatch" style="background:#ac00d7"></span>Berry Gradient Accent</span><span class="token-val">#AC00D7</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

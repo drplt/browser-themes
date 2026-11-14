@@ -1,0 +1,18 @@
+{
+  "name": "droplet-theme",
+  "version": "1.0.0",
+  "description": "Firefox and Chrome Dark & Light themes powered by the Droplet color scheme.",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "keywords": [
+    "firefox-theme",
+    "chrome-theme",
+    "droplet",
+    "dark-theme",
+    "light-theme"
+  ],
+  "author": "Droplet Inc.",
+  "license": "UNLICENSED",
+  "private": true
+}

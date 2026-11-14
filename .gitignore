@@ -1,0 +1,26 @@
+# Dependencies & build artifacts
+node_modules/
+build/
+dist/
+web-ext-artifacts/
+*.xpi
+*.crx
+
+# Private keys & secrets (never commit Chrome CRX signing keys or env files)
+*.pem
+*.key
+.env
+.env.*
+
+# Chrome unpacked theme cache
+Cached Theme.pak
+*.pak
+
+# OS & editor files
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+*.swp
+.vscode/
+.idea/
