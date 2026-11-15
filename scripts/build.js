@@ -168,15 +168,15 @@ function build() {
   const chromeLightZipPath = path.join(BUILD_DIR, "droplet-chrome-theme-light.zip");
 
   // Package Firefox Dark & Light (.xpi and .zip)
-  execFileSync("zip", ["-q", "-r", ffDarkXpiPath, ...addonFiles], { cwd: ADDON_DARK_DIR });
+  execFileSync("zip", ["-q", "-r", ffDarkXpiPath, ...addonFiles, "-x", "*.DS_Store"], { cwd: ADDON_DARK_DIR });
   fs.copyFileSync(ffDarkXpiPath, ffDarkZipPath);
 
-  execFileSync("zip", ["-q", "-r", ffLightXpiPath, ...addonFiles], { cwd: ADDON_LIGHT_DIR });
+  execFileSync("zip", ["-q", "-r", ffLightXpiPath, ...addonFiles, "-x", "*.DS_Store"], { cwd: ADDON_LIGHT_DIR });
   fs.copyFileSync(ffLightXpiPath, ffLightZipPath);
 
   // Package Chrome Dark & Light (.zip)
-  execFileSync("zip", ["-q", "-r", chromeDarkZipPath, ...chromeAddonFiles], { cwd: CHROME_DARK_DIR });
-  execFileSync("zip", ["-q", "-r", chromeLightZipPath, ...chromeAddonFiles], { cwd: CHROME_LIGHT_DIR });
+  execFileSync("zip", ["-q", "-r", chromeDarkZipPath, ...chromeAddonFiles, "-x", "*.DS_Store"], { cwd: CHROME_DARK_DIR });
+  execFileSync("zip", ["-q", "-r", chromeLightZipPath, ...chromeAddonFiles, "-x", "*.DS_Store"], { cwd: CHROME_LIGHT_DIR });
 
   console.log("✅ Built Droplet Firefox Add-on packages (Dark & Light):");
   console.log(`   - ${path.relative(ROOT_DIR, ffDarkXpiPath)} & ${path.relative(ROOT_DIR, ffDarkZipPath)}`);
